@@ -169,8 +169,12 @@ public class ABB<K, V> implements IMapeamento<K, V>{
     	
     	Lista<V> recorte = new Lista<>();
     	
-    	if (raiz == null || chaveDeOnde == null || chaveAteOnde == null || 
-    			comparador.compare(chaveDeOnde, chaveAteOnde) > 0) {
+    	if (raiz == null || chaveDeOnde == null || chaveAteOnde == null) {
+    		termino = System.nanoTime();
+    		return recorte;
+    	}
+    	
+    	if (comparar(chaveDeOnde, chaveAteOnde) > 0) {
     		termino = System.nanoTime();
     		return recorte;
     	}
@@ -185,10 +189,8 @@ public class ABB<K, V> implements IMapeamento<K, V>{
     	if (raizArvore == null)
     		return;
     	
-    	comparacoes++;
-    	int comparacaoDeOnde = comparador.compare(raizArvore.getChave(), chaveDeOnde);
-    	comparacoes++;
-    	int comparacaoAteOnde = comparador.compare(raizArvore.getChave(), chaveAteOnde);
+    	int comparacaoDeOnde = comparar(raizArvore.getChave(), chaveDeOnde);
+    	int comparacaoAteOnde = comparar(raizArvore.getChave(), chaveAteOnde);
     	
     	if (comparacaoDeOnde >= 0)
     		recortar(raizArvore.getEsquerda(), chaveDeOnde, chaveAteOnde, recorte);
@@ -198,6 +200,11 @@ public class ABB<K, V> implements IMapeamento<K, V>{
     	
     	if (comparacaoAteOnde <= 0)
     		recortar(raizArvore.getDireita(), chaveDeOnde, chaveAteOnde, recorte);
+    }
+    
+    private int comparar(K chave1, K chave2) {
+    	comparacoes++;
+    	return comparador.compare(chave1, chave2);
     }
 
 	@Override
